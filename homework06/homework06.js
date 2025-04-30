@@ -21,7 +21,7 @@ let viewMatrix = mat4.create();
 let projMatrix = mat4.create();
 let modelMatrix = mat4.create();
 const axes = new Axes(gl, 1.5); // create an Axes object with the length of axis 1.5
-const texture = loadTexture(gl, true, '../images/textures/sunrise.jpg'); // see ../util/texture.js
+const texture = loadTexture(gl, true, './sunrise.jpg'); // see ../util/texture.js
 const octahedron = new Octahedron(gl);
 
 // Arcball object: initial distance 5.0, rotation sensitivity 2.0, zoom sensitivity 0.0005
