@@ -93,11 +93,8 @@ const directionalLight = new THREE.DirectionalLight(0xffffff, 2.0);
 directionalLight.position.set(-20, 40, 60);
 scene.add(directionalLight);
 
-/*
-const ambientLight = new THREE.AmbientLight(0x292929);
-scene.add(ambientLight);
 
-*/
+
 
 // GUI
 const gui = new GUI();
@@ -136,7 +133,7 @@ const controls = new function () {
     };
 };
 const guiCamera = gui.addFolder('Camera');
-guiCamera.add(controls, 'switchCamera').name('Switch Camera type');
+guiCamera.add(controls, 'switchCamera').name('Switch Camera Type');
 guiCamera.add(controls, 'perspective').name('Current Camera').listen();
 
 const param = {
@@ -166,7 +163,6 @@ guiEarth.add(param, 'earthOrbSpeed', 0.0, 0.1, 0.001).name('Orbit Speed');
 guiMars.add(param, 'marsRotSpeed', 0.0, 0.1, 0.001).name('Rotation Speed');
 guiMars.add(param, 'marsOrbSpeed', 0.0, 0.1, 0.001).name('Orbit Speed');
 
-const clock = new THREE.Clock();
 
 let mercurystep = 0;
 let venusstep = 0;
