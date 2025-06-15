@@ -20,7 +20,7 @@ export class GameManager {
     // 닭 업데이트
     for (let i = this.chickens.length - 1; i >= 0; i--) {
       const chicken = this.chickens[i];
-      const result = chicken.update(deltaTime, this.planeSize);
+      const result = chicken.update(deltaTime, this.planeSize, this.chickens);  // edited
 
       if (!chicken.alive) {
         this.chickens.splice(i, 1);
@@ -41,6 +41,7 @@ export class GameManager {
       // 부화했을 시 닭 객체로 변경
       if (result === 'hatch') {
         const newPos = egg.mesh.position.clone();
+        newPos.y = 0.15;
         this.spawnChicken(newPos);
         egg.dispose();
         this.eggs.splice(i, 1);
@@ -54,7 +55,8 @@ export class GameManager {
   }
 
   spawnEgg(position) {
-    const egg = new Egg(this.scene, position);
+    const isGolden = Math.random() < 0.10;  // 10% 확률로 황금알
+    const egg = new Egg(this.scene, position, isGolden);
     this.eggs.push(egg);
   }
 
