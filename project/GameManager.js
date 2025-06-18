@@ -12,15 +12,22 @@ export class GameManager {
     this.chickens = [];
     this.eggs = [];
 
+    this.timeLeft = 100;
+    this.diseaseTimer = 0;
+    this.diseaseEnabled = false;
+    this.hatch = 1;
+
     // 첫 닭 하나 생성
     this.spawnChicken(new THREE.Vector3(0, 0.15, 0));
   }
 
-  update(deltaTime) {
+  update(deltaTime, timeLeft) {
+    this.timeLeft = timeLeft;
+
     // 닭 업데이트
     for (let i = this.chickens.length - 1; i >= 0; i--) {
       const chicken = this.chickens[i];
-      const result = chicken.update(deltaTime, this.planeSize, this.chickens);  // edited
+      const result = chicken.update(deltaTime, this.planeSize, this.chickens);
 
       if (!chicken.alive) {
         this.chickens.splice(i, 1);
@@ -30,6 +37,14 @@ export class GameManager {
       if (result === 'layEgg') {
         const eggPos = chicken.mesh.position.clone();
         this.spawnEgg(eggPos);
+
+        if (this.hatch){
+          const audio = new Audio('./assets/pop.mp3');
+          audio.play().catch(err => {
+            console.warn("소리 재생 실패:", err);
+          });
+          //this.hatch = 0;
+        }
       }
     }
 
@@ -43,8 +58,39 @@ export class GameManager {
         const newPos = egg.mesh.position.clone();
         newPos.y = 0.15;
         this.spawnChicken(newPos);
+
+        if (1){
+          const audio = new Audio('./assets/hatch.mp3');
+          audio.play().catch(err => {
+            console.warn("소리 재생 실패:", err);
+          });
+          //this.hatch = 0;
+        }
+
         egg.dispose();
         this.eggs.splice(i, 1);
+      }
+    }
+
+    if(!this.diseaseEnabled && this.timeLeft < 50){
+      this.diseaseEnabled = true;
+      this.diseaseTimer = 0;
+    }
+
+    if(this.diseaseEnabled){
+      this.diseaseTimer += deltaTime;
+
+      if(this.diseaseTimer > 10){
+        this.diseaseTimer = 0;
+        const healthyChickens = this.chickens.filter(c => !c.isSick);
+
+        if (healthyChickens.length > 0){
+          for (const chicken of healthyChickens){
+            if(Math.random() < 0.10){
+              chicken.infect();
+            }
+          }
+        }
       }
     }
   }
@@ -61,6 +107,6 @@ export class GameManager {
   }
 
   isGameOver() {
-    return this.chickens.length === 0;
+    return this.timeLeft <= 0;
   }
 }

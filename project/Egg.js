@@ -29,7 +29,7 @@ export class Egg {
 
   // 랜덤하게 부화 시간을 결정
   _randomHatchDelay() {
-    return 15000 + Math.random() * 15000; // 15~30초
+    return 10000 + Math.random() * 10000; // 10~20초
   }
 
   update() {

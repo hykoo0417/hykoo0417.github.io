@@ -3,13 +3,17 @@
 export class ResourceManager {
   constructor() {
     this.money = 0;
-    this.timer = 0;
+    this.timer = 100;
     this.moneyRate = 1;       // 초당 1원 증가
   }
 
   update(deltaTime) {
     this.money += this.moneyRate * deltaTime;
-    this.timer += deltaTime;
+    this.timer -= deltaTime;
+
+    if (this.timer <= 0){
+      this.timer = 0;
+    }
   }
 
   spend(amount) {
