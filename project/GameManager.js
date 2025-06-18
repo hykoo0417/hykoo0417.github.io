@@ -18,7 +18,7 @@ export class GameManager {
     this.hatch = 1;
 
     // 첫 닭 하나 생성
-    this.spawnChicken(new THREE.Vector3(0, 0.15, 0));
+    this.spawnChicken(new THREE.Vector3(0, 0.10, 0));
   }
 
   update(deltaTime, timeLeft) {
@@ -56,7 +56,7 @@ export class GameManager {
       // 부화했을 시 닭 객체로 변경
       if (result === 'hatch') {
         const newPos = egg.mesh.position.clone();
-        newPos.y = 0.15;
+        newPos.y = 0.10;
         this.spawnChicken(newPos);
 
         if (1){
