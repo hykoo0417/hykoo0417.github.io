@@ -16,10 +16,71 @@ let gameOver = false;
 let warnedTimes = new Set(); 
 
 const PLANE_SIZE = 10;
-const TOTAL_TIME =100;
+const TOTAL_TIME = 100;
 
-init();
-animate();
+// 전역 BGM 객체
+let bgm = new Audio('./assets/bgm.mp3');
+bgm.loop = true;
+bgm.volume = 1.0;
+
+// 🎬 배경 이미지와 Start 버튼을 담은 div 생성
+const startScreen = document.createElement('div');
+startScreen.style.position = 'fixed';
+startScreen.style.top = '0';
+startScreen.style.left = '0';
+startScreen.style.width = window.innerWidth + 'px';
+startScreen.style.height = window.innerHeight + 'px';
+startScreen.style.backgroundImage = 'url("./assets/opening.png")';
+startScreen.style.backgroundSize = 'auto 100%';        // 🎯 높이에 맞추고 너비 자동
+startScreen.style.backgroundPosition = 'center';
+startScreen.style.backgroundRepeat = 'no-repeat';
+startScreen.style.overflow = 'hidden';
+startScreen.style.display = 'flex';
+startScreen.style.justifyContent = 'center';
+startScreen.style.alignItems = 'center';
+startScreen.style.zIndex = '999';
+
+window.addEventListener('resize', () => {
+  startScreen.style.width = window.innerWidth + 'px';
+  startScreen.style.height = window.innerHeight + 'px';
+});
+
+// ⏯ Start 버튼 생성
+const startButton = document.createElement('button');
+startButton.textContent = '게임 시작';
+startButton.style.padding = '20px 40px';
+startButton.style.fontSize = '24px';
+startButton.style.cursor = 'pointer';
+startButton.style.border = 'none';
+startButton.style.borderRadius = '12px';
+startButton.style.backgroundColor = '#ffffffcc';
+startButton.style.color = '#333';
+startButton.style.boxShadow = '0 4px 10px rgba(0,0,0,0.3)';
+startButton.style.transition = 'transform 0.2s';
+
+startButton.addEventListener('mouseenter', () => {
+  startButton.style.transform = 'scale(1.05)';
+});
+startButton.addEventListener('mouseleave', () => {
+  startButton.style.transform = 'scale(1)';
+});
+
+// 버튼을 start 화면 div에 추가
+startScreen.appendChild(startButton);
+document.body.appendChild(startScreen);
+
+// ▶️ 버튼 클릭 시 실행
+startButton.addEventListener('click', () => {
+  bgm.play().catch(err => {
+    console.warn('🎵 BGM 재생 실패:', err);
+  });
+
+  document.body.removeChild(startScreen); // 배경 + 버튼 제거
+  init();      // 게임 초기화
+  animate();   // 게임 루프 시작
+});
+
+
 
 function init() {
   scene = new THREE.Scene();
@@ -54,13 +115,6 @@ function init() {
   controls.maxPolarAngle = Math.PI / 2.5;
   controls.enablePan = false;
   controls.update();
-
-  const bgm = new Audio('./assets/bgm.mp3');
-  bgm.loop = true;         // 🔁 무한 반복
-  bgm.volume = 1.0;        // 🔉 볼륨 (0.0 ~ 1.0)
-  bgm.play().catch((err) => {
-    console.warn('🔇 BGM 재생 실패:', err);
-  });
 
   // Load Textures
   const textureLoader = new THREE.TextureLoader();
@@ -172,7 +226,7 @@ function animate() {
   uiManager.updateMoney(resourceManager.getMoney());
 
     //  경고 팝업 표시 로직
-  const warningTriggers = [55];
+  const warningTriggers = [50];
   for (let t of warningTriggers) {
     if (timeLeft === t && !warnedTimes.has(t)) {
       warnedTimes.add(t);
